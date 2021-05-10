@@ -1,0 +1,48 @@
+service: homeworkit
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-1
+  memorySize: 128
+plugins:
+  - serverless-offline
+
+functions:
+  createSubject:
+    handler: src/lambdas/subject.lambdas.createSubject
+    events:
+      - http:
+          path: /subject/create
+          method: POST
+          cors: true
+  createTask:
+    handler: src/lambdas/task.lambdas.createTask
+    events:
+      - http:
+          path: /task/create
+          method: POST
+          cors: true
+  createClass:
+    handler: src/lambdas/class.lambdas.createClass
+    events:
+      - http:
+          path: /class/create
+          method: POST
+          cors: true
+  getUserSubjects:
+    handler: src/lambdas/subject.lambdas.getClassSubjects
+    events:
+      - http:
+          path: /{Id}/subjects
+          method: GET
+          cors: true
+  getSubjectTasks:
+    handler: src/lambdas/task.lambdas.getSubjectTasks
+    events:
+      - http:
+          path: /{Id}/tasks
+          method: GET
+          cors: true
