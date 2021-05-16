@@ -43,13 +43,48 @@ module.exports.createSubject = async (event, context, callback) => {
   }
 };
 
+module.exports.getSubject = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  const parameters = event.pathParameters;
+
+  try {
+    let subjectData = await Class.find({
+      id: parameters.id,
+    });
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        subjectData,
+      }),
+    };
+  } catch (error) {
+    return {
+      statusode: error.statusCode,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        status: error.statusCode,
+        message: error.message,
+      }),
+    };
+  }
+};
+
 module.exports.getClassSubjects = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   await connectToDatabase();
 
   const parameters = event.pathParameters;
-  let paramaters = event.queryStringParameters;
 
   try {
     let classSubjects = await Subject.find({
@@ -67,7 +102,7 @@ module.exports.getClassSubjects = async (event, context, callback) => {
     };
   } catch (error) {
     return {
-      statusCode: error.statusCode,
+      statusode: error.statusCode,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,

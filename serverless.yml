@@ -11,6 +11,7 @@ plugins:
   - serverless-offline
 
 functions:
+  #POST METHODS
   createSubject:
     handler: src/lambdas/subject.lambdas.createSubject
     events:
@@ -32,7 +33,38 @@ functions:
           path: /class/create
           method: POST
           cors: true
-  getUserSubjects:
+
+  #GET METHODS
+  getClass:
+    handler: src/lambdas/class.lambdas.getClass
+    events:
+      - http:
+          path: /class/{Id}
+          method: GET
+          cors: true
+  getSubject:
+    handler: src/lambdas/subject.lambdas.getSubject
+    events:
+      - http:
+          path: /subject/{Id}
+          method: GET
+          cors: true
+  getTask:
+    handler: src/lambdas/task.lambdas.getTask
+    events:
+      - http:
+          path: /task/{Id}
+          method: GET
+          cors: true
+  #==========LAMBDAS NOT DONE YET=============
+  getSchoolClasses:
+    handler: src/lambdas/school.lambdas.getSchoolClasses
+    events:
+      - http:
+          path: /{Id}/classes
+          method: GET
+          cors: true
+  getClassSubjects:
     handler: src/lambdas/subject.lambdas.getClassSubjects
     events:
       - http:
@@ -45,4 +77,55 @@ functions:
       - http:
           path: /{Id}/tasks
           method: GET
+          cors: true
+  getStudentSubjects:
+    handler: src/lambdas/subject.lambdas.getUserSubjects
+    events:
+      - http:
+          path: /{studentId}/subjects
+          method: GET
+          cors: true
+  #DELETE METHODS
+  deleteClass:
+    handler: src/lambdas/class.lambdas.deleteClass
+    events:
+      - http:
+          path: /class/{Id}
+          method: DELETE
+          cors: true
+  deleteSubject:
+    handler: src/lambdas/subject.lambdas.deleteSubject
+    events:
+      - http:
+          path: /subject/{Id}
+          method: DELETE
+          cors: true
+  deleteTask:
+    handler: src/lambdas/task.lambdas.deleteTask
+    events:
+      - http:
+          path: /task/{Id}
+          method: DELETE
+          cors: true
+  #UPDATE METHODS
+  updateClass:
+    handler: src/lambdas/class.lambdas.updateClass
+    events:
+      - http:
+          path: /class/{Id}
+          method: PUT
+          cors: true
+  updateSubject:
+    handler: src/lambdas/subject.lambdas.updateSubject
+    events:
+      - http:
+          path: /subject/{Id}
+          method: PUT
+          cors: true
+  updateTask:
+    handler: src/lambdas.task.lambdas.updateTask
+    events:
+      - http:
+          path: /task/{Id}
+          method: PUT
           cors: true
