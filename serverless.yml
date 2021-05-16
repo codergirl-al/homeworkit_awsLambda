@@ -56,7 +56,6 @@ functions:
           path: /task/{Id}
           method: GET
           cors: true
-  #==========LAMBDAS NOT DONE YET=============
   getSchoolClasses:
     handler: src/lambdas/school.lambdas.getSchoolClasses
     events:
@@ -85,6 +84,8 @@ functions:
           path: /{studentId}/subjects
           method: GET
           cors: true
+
+  #==========LAMBDAS NOT DONE YET=============
   #DELETE METHODS
   deleteClass:
     handler: src/lambdas/class.lambdas.deleteClass
@@ -129,3 +130,4 @@ functions:
           path: /task/{Id}
           method: PUT
           cors: true
+#temporaryshit

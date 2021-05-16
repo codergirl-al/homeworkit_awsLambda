@@ -4,6 +4,7 @@ const Class = require("../models/class.model");
 const connectToDatabase = require("../db/db");
 const AWS = require("aws-sdk");
 const axios = require("axios");
+const { connect } = require("mongodb");
 
 module.exports.createClass = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
@@ -105,6 +106,57 @@ module.exports.getSchoolClasses = async (event, context, callback) => {
   } catch (error) {
     return {
       statusode: error.statusCode,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        status: error.statusCode,
+        message: error.message,
+      }),
+    };
+  }
+};
+
+module.exports.deleteClass = async (event, context, callback) => {
+  event.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  const parameters = event.pathParameters;
+  const requestBody = JSON.parse(event.body);
+
+  try {
+    let classToDelete = Class.findOne({
+      id: parameters.Id,
+      school: requestBody.school,
+    });
+    if (!classToDelete) {
+      return {
+        statuscode: 404,
+        message: "Class doesn't exist",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify({
+          status: error.statusCode,
+          message: error.message,
+        }),
+      };
+    } else {
+      classToDelete.remove();
+    }
+    return {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(classToDelete),
+    };
+  } catch (error) {
+    return {
+      statusCode: error.statusCode,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,

@@ -153,3 +153,54 @@ module.exports.getStudentSubjects = async (event, context, callback) => {
     };
   }
 };
+
+module.exports.deleteTask = async (event, context, callback) => {
+  event.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  const parameters = event.pathParameters;
+  const requestBody = JSON.parse(event.body);
+
+  try {
+    let taskToDelete = Class.findOne({
+      id: parameters.Id,
+      student: requestBody.student,
+    });
+    if (!taskToDelete) {
+      return {
+        statuscode: 404,
+        message: "Class doesn't exist",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify({
+          status: error.statusCode,
+          message: error.message,
+        }),
+      };
+    } else {
+      taskToDelete.remove();
+    }
+    return {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(taskToDelete),
+    };
+  } catch (error) {
+    return {
+      statusCode: error.statusCode,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        status: error.statusCode,
+        message: error.message,
+      }),
+    };
+  }
+};

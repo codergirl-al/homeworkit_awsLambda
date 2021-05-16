@@ -114,3 +114,54 @@ module.exports.getClassSubjects = async (event, context, callback) => {
     };
   }
 };
+
+module.exports.deleteSubject = async (event, context, callback) => {
+  event.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  const parameters = event.pathParameters;
+  const requestBody = JSON.parse(event.body);
+
+  try {
+    let subjectToDelete = Subject.findOne({
+      id: parameters.Id,
+      teacher: requestBody.teacher,
+    });
+    if (!subjectToDelete) {
+      return {
+        statuscode: 404,
+        message: "Class doesn't exist",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify({
+          status: error.statusCode,
+          message: error.message,
+        }),
+      };
+    } else {
+      subjectToDelete.remove();
+    }
+    return {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(subjectToDelete),
+    };
+  } catch (error) {
+    return {
+      statusCode: error.statusCode,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        status: error.statusCode,
+        message: error.message,
+      }),
+    };
+  }
+};
