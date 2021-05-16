@@ -44,3 +44,75 @@ module.exports.createClass = async (event, context, callback) => {
     };
   }
 };
+
+module.exports.getClass = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  const parameters = event.pathParameters;
+
+  try {
+    let classData = await Class.find({
+      id: parameters.id,
+    });
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        classData,
+      }),
+    };
+  } catch (error) {
+    return {
+      statusode: error.statusCode,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        status: error.statusCode,
+        message: error.message,
+      }),
+    };
+  }
+};
+
+module.exports.getSchoolClasses = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  const parameters = event.pathParameters;
+
+  try {
+    let schoolClasses = await Class.find({
+      school: parameters.id,
+    });
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        schoolClasses,
+      }),
+    };
+  } catch (error) {
+    return {
+      statusode: error.statusCode,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        status: error.statusCode,
+        message: error.message,
+      }),
+    };
+  }
+};

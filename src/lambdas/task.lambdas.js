@@ -46,15 +46,52 @@ module.exports.createTask = async (event, context, callback) => {
   }
 };
 
+module.exports.getTask = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  const parameters = event.pathParameters;
+
+  try {
+    let taskData = await Class.find({
+      id: parameters.id,
+    });
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        taskData,
+      }),
+    };
+  } catch (error) {
+    return {
+      statusode: error.statusCode,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        status: error.statusCode,
+        message: error.message,
+      }),
+    };
+  }
+};
+
 module.exports.getSubjectTasks = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   await connectToDatabase();
 
   const parameters = event.pathParameters;
+
   try {
     let subjectTasks = await Task.find({
-      subject: parameters.subject,
+      subject: parameters.id,
     });
     return {
       statusCode: 200,
@@ -68,7 +105,43 @@ module.exports.getSubjectTasks = async (event, context, callback) => {
     };
   } catch (error) {
     return {
-      statusCode: error.statusCode,
+      statusode: error.statusCode,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        status: error.statusCode,
+        message: error.message,
+      }),
+    };
+  }
+};
+
+module.exports.getStudentSubjects = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  const parameters = event.pathParameters;
+
+  try {
+    let studentSubjects = await Subject.find({
+      student: parameters.studentId,
+    });
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        studentSubjects,
+      }),
+    };
+  } catch (error) {
+    return {
+      statusode: error.statusCode,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
