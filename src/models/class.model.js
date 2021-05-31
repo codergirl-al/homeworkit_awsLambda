@@ -28,6 +28,10 @@ const ClassModel = new mongoose.Schema(
         ref: "Subject",
       },
     ],
+    edited: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

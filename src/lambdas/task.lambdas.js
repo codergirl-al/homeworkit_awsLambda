@@ -54,8 +54,8 @@ module.exports.getTask = async (event, context, callback) => {
   const parameters = event.pathParameters;
 
   try {
-    let taskData = await Class.find({
-      id: parameters.id,
+    let taskData = await Task.findOne({
+      _id: parameters.Id,
     });
     return {
       statusCode: 200,
@@ -90,8 +90,8 @@ module.exports.getSubjectTasks = async (event, context, callback) => {
   const parameters = event.pathParameters;
 
   try {
-    let subjectTasks = await Task.find({
-      subject: parameters.id,
+    let subjectTasks = await Task.findOne({
+      subject: parameters.Id,
     });
     return {
       statusCode: 200,
@@ -118,30 +118,93 @@ module.exports.getSubjectTasks = async (event, context, callback) => {
   }
 };
 
-module.exports.getStudentSubjects = async (event, context, callback) => {
+module.exports.deleteTask = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   await connectToDatabase();
 
   const parameters = event.pathParameters;
+  //const requestBody = JSON.parse(event.body);
 
   try {
-    let studentSubjects = await Subject.find({
-      student: parameters.studentId,
+    const taskToDelete = await Task.findOne({
+      _id: parameters.Id,
     });
+    if (!taskToDelete) {
+      return {
+        statuscode: 404,
+        message: "Task doesn't exist",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify({
+          status: error.statusCode,
+          message: error.message,
+        }),
+      };
+    } else {
+      taskToDelete.remove();
+    }
     return {
-      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(taskToDelete),
+    };
+  } catch (error) {
+    return {
+      statusCode: error.statusCode,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
       },
       body: JSON.stringify({
-        studentSubjects,
+        status: error.statusCode,
+        message: error.message,
       }),
+    };
+  }
+};
+
+module.exports.updateTask = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  await connectToDatabase();
+
+  try {
+    let updatedTask = await Task.findByIdAndUpdate(
+      event.pathParameters.Id,
+      JSON.parse(event.body),
+      {
+        edited: true,
+      }
+    );
+    if (!updatedTask) {
+      return {
+        statuscode: 404,
+        message: "Task doesn't exist",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify({
+          status: error.statusCode,
+          message: error.message,
+        }),
+      };
+    }
+    return {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(updatedTask),
     };
   } catch (error) {
     return {
-      statusode: error.statusCode,
+      statusCode: error.statusCode,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
