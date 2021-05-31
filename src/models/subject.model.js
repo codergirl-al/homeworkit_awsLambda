@@ -26,6 +26,10 @@ const SubjectModel = new mongoose.Schema(
         ref: "Task",
       },
     ],
+    edited: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

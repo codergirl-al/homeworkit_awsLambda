@@ -78,14 +78,12 @@ functions:
           method: GET
           cors: true
   getStudentSubjects:
-    handler: src/lambdas/subject.lambdas.getUserSubjects
+    handler: src/lambdas/subject.lambdas.getStudentSubjects
     events:
       - http:
-          path: /{studentId}/subjects
+          path: /student/{studentId}/subjects
           method: GET
           cors: true
-
-  #==========LAMBDAS NOT DONE YET=============
   #DELETE METHODS
   deleteClass:
     handler: src/lambdas/class.lambdas.deleteClass
@@ -124,10 +122,9 @@ functions:
           method: PUT
           cors: true
   updateTask:
-    handler: src/lambdas.task.lambdas.updateTask
+    handler: src/lambdas/task.lambdas.updateTask
     events:
       - http:
           path: /task/{Id}
           method: PUT
           cors: true
-#temporaryshit
