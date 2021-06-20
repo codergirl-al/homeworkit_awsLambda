@@ -1,6 +1,6 @@
 # HomeworkIt Backend
 
-Hello friend,
+Hello human 🚀
 
 Homeworkit is a project I've started with the purpose to help schooling systems with the evaluation and management of tasks and homeworks.
 
@@ -13,4 +13,4 @@ To open the project you have to:
 - since serverless offline is installed, you can run "serverless offline".
 - take a look at everything, why not contribute if you have any ideas.
 
-ps. Amazon Cognito config coming soon
+ps. Amazon Cognito configuration is coming soon 🤓
