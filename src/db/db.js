@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const databaseconnect = process.env.DB;
 require("../models/subject.model");
 require("../models/task.model");
 require("../models/class.model");
@@ -12,15 +13,12 @@ module.exports = connectToDatabase = () => {
   }
   console.log("=> using new database connection");
   return mongoose
-    .connect(
-      "mongodb+srv://dbuser:123dbuser321@homeworkio.fo6ga.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-        useUnifiedTopology: true,
-      }
-    )
+    .connect(databaseconnect, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    })
     .then((db) => {
       isConnected = db.connections[0].readyState;
     });
